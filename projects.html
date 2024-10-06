@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects - My Personal Website</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: url('imagesbackground.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+        }
+        nav {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 10px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        .navigation {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            margin: 0;
+            padding: 0;
+        }
+        .navigation li {
+            margin: 0 15px;
+        }
+        .navigation a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .navigation a:hover {
+            text-decoration: underline;
+        }
+        main {
+            padding: 100px 20px 20px 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: rgba(0, 0, 0, 0.6);
+            border-radius: 10px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .project-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .project-form label {
+            font-weight: bold;
+        }
+        .project-form input, .project-form textarea {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            width: 100%;
+        }
+        .project-form textarea {
+            resize: vertical;
+        }
+        .project-form button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #28a745;
+            color: #fff;
+            font-size: 1em;
+            cursor: pointer;
+            width: 200px;
+        }
+        .project-form button:hover {
+            background-color: #218838;
+        }
+        .project-list {
+            list-style: none;
+            padding: 0;
+        }
+        .project-item {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        .project-item h3 {
+            margin: 0;
+            font-size: 1.2em;
+        }
+        .project-item p {
+            margin: 5px 0;
+        }
+        .project-item a {
+            color: #ffc107;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .project-item a:hover {
+            text-decoration: underline;
+        }
+        .project-item button {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        .project-item .edit-btn {
+            background-color: #ffc107;
+            color: #000;
+            margin-right: 5px;
+        }
+        .project-item .edit-btn:hover {
+            background-color: #e0a800;
+        }
+        .project-item .delete-btn {
+            background-color: #dc3545;
+            color: #fff;
+        }
+        .project-item .delete-btn:hover {
+            background-color: #c82333;
+        }
+        .nav-buttons {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .nav-buttons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        .nav-buttons button:hover {
+            background-color: #0069d9;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul class="navigation">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="personal.html">Personal Info</a></li>
+            <li><a href="education.html">Education</a></li>
+            <li><a href="work.html">Work Experience</a></li>
+            <li><a href="skills.html">Skills</a></li>
+            <li><a href="projects.html">Projects</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <h2>Projects</h2>
+        <form id="projectForm" class="project-form">
+            <label for="title">Project Title:</label>
+            <input type="text" id="title" name="title" required>
+
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" rows="3" required></textarea>
+
+            <label for="link">GitHub Link:</label>
+            <input type="url" id="link" name="link" placeholder="https://github.com/yourusername/project" required>
+
+            <button type="submit">Add Project</button>
+        </form>
+
+        <ul id="projectList" class="project-list">
+            <!-- Project items will be appended here -->
+        </ul>
+
+        <div class="nav-buttons">
+            <button onclick="window.location.href='skills.html'">Back: Skills</button>
+            <button onclick="window.location.href='contact.html'">Next: Contact</button>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const projectForm = document.getElementById('projectForm');
+            const projectList = document.getElementById('projectList');
+
+            // Load saved projects data
+            let projectsData = [];
+            if (localStorage.getItem('projects')) {
+                projectsData = JSON.parse(localStorage.getItem('projects'));
+                projectsData.forEach(item => {
+                    appendProjectItem(item);
+                });
+            }
+
+            // Function to append project item to the list
+            function appendProjectItem(item) {
+                const li = document.createElement('li');
+                li.classList.add('project-item');
+                li.setAttribute('data-id', item.id);
+                li.innerHTML = `
+                    <h3>${item.title}</h3>
+                    <p>${item.description}</p>
+                    <a href="${item.link}" target="_blank">View on GitHub</a>
+                    <button class="edit-btn">Edit</button>
+                    <button class="delete-btn">Delete</button>
+                `;
+                projectList.appendChild(li);
+            }
+
+            // Handle form submission
+            projectForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const title = document.getElementById('title').value.trim();
+                const description = document.getElementById('description').value.trim();
+                const link = document.getElementById('link').value.trim();
+
+                const newProject = {
+                    id: Date.now(),
+                    title,
+                    description,
+                    link
+                };
+
+                projectsData.push(newProject);
+                localStorage.setItem('projects', JSON.stringify(projectsData));
+                appendProjectItem(newProject);
+                projectForm.reset();
+            });
+
+            // Handle edit and delete actions
+            projectList.addEventListener('click', (e) => {
+                if (e.target.classList.contains('edit-btn')) {
+                    const li = e.target.parentElement;
+                    const id = li.getAttribute('data-id');
+                    const project = projectsData.find(item => item.id == id);
+
+                    // Populate form with existing data
+                    document.getElementById('title').value = project.title;
+                    document.getElementById('description').value = project.description;
+                    document.getElementById('link').value = project.link;
+
+                    // Remove the item from the list and data
+                    projectList.removeChild(li);
+                    projectsData = projectsData.filter(item => item.id != id);
+                    localStorage.setItem('projects', JSON.stringify(projectsData));
+                }
+
+                if (e.target.classList.contains('delete-btn')) {
+                    const li = e.target.parentElement;
+                    const id = li.getAttribute('data-id');
+                    if (confirm('Are you sure you want to delete this project?')) {
+                        projectList.removeChild(li);
+                        projectsData = projectsData.filter(item => item.id != id);
+                        localStorage.setItem('projects', JSON.stringify(projectsData));
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

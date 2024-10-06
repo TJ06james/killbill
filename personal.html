@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Information - My Personal Website</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: url('imagesbackground.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+        }
+        nav {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 10px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        .navigation {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            margin: 0;
+            padding: 0;
+        }
+        .navigation li {
+            margin: 0 15px;
+        }
+        .navigation a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .navigation a:hover {
+            text-decoration: underline;
+        }
+        main {
+            padding: 100px 20px 20px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: rgba(0, 0, 0, 0.6);
+            border-radius: 10px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .personal-info {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input, textarea {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            width: 100%;
+            font-size: 1em;
+        }
+        textarea {
+            resize: vertical;
+        }
+        .buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .buttons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #28a745;
+            color: #fff;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        .buttons button:hover {
+            background-color: #218838;
+        }
+        .buttons .nav-button {
+            background-color: #007bff;
+        }
+        .buttons .nav-button:hover {
+            background-color: #0069d9;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul class="navigation">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="personal.html">Personal Info</a></li>
+            <li><a href="education.html">Education</a></li>
+            <li><a href="work.html">Work Experience</a></li>
+            <li><a href="skills.html">Skills</a></li>
+            <li><a href="projects.html">Projects</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <h2>Personal Information</h2>
+        <form id="personalInfoForm">
+            <div class="personal-info">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="phone">Phone:</label>
+                <input type="tel" id="phone" name="phone" required>
+
+                <label for="bio">Short Bio:</label>
+                <textarea id="bio" name="bio" rows="5" required></textarea>
+            </div>
+            <div class="buttons">
+                <button type="button" id="savePersonal">Save</button>
+            </div>
+            <div class="buttons">
+                <button type="button" class="nav-button" onclick="window.location.href='index.html'">Back: Home</button>
+                <button type="button" class="nav-button" onclick="window.location.href='education.html'">Next: Education</button>
+            </div>
+        </form>
+    </main>
+
+    <!-- jsPDF library from CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('personalInfoForm');
+            const saveButton = document.getElementById('savePersonal');
+
+            // Load saved data
+            if (localStorage.getItem('personalInfo')) {
+                const data = JSON.parse(localStorage.getItem('personalInfo'));
+                form.name.value = data.name || '';
+                form.email.value = data.email || '';
+                form.phone.value = data.phone || '';
+                form.bio.value = data.bio || '';
+            }
+
+            // Save data to local storage
+            saveButton.addEventListener('click', () => {
+                const personalInfo = {
+                    name: form.name.value,
+                    email: form.email.value,
+                    phone: form.phone.value,
+                    bio: form.bio.value
+                };
+                localStorage.setItem('personalInfo', JSON.stringify(personalInfo));
+                alert('Personal information saved!');
+            });
+        });
+    </script>
+</body>
+</html>

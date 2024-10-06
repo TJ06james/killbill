@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact</title>
+    <style>
+        body {
+            background-image: url('imagesbackground.jpg'); /* Replace with your image */
+            background-size: cover;
+            font-family: Arial, sans-serif;
+            color: white;
+        }
+        nav {
+            margin: 20px;
+            text-align: center;
+        }
+        nav a {
+            margin: 15px;
+            color: white;
+            text-decoration: none;
+            font-size: 20px;
+        }
+        section {
+            padding: 20px;
+        }
+        input, textarea {
+            margin: 5px;
+            padding: 10px;
+            width: 80%;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="personal.html">Personal Information</a>
+        <a href="education.html">Education</a>
+        <a href="work.html">Work Experience</a>
+        <a href="skills.html">Skills</a>
+        <a href="projects.html">Projects</a>
+    </nav>
+    <section>
+        <h1>Contact</h1>
+        <form id="contact-info">
+            <input type="text" placeholder="Name" id="contactName">
+            <input type="email" placeholder="Email" id="contactEmail">
+            <textarea placeholder="Message" id="message"></textarea>
+        </form>
+        <button onclick="downloadPDF()">Download PDF</button>
+    </section>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        function downloadPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Add Contact Info
+            doc.text('Contact Information', 10, 10);
+            doc.text('Name: ' + (document.getElementById('contactName').value || 'N/A'), 10, 20);
+            doc.text('Email: ' + (document.getElementById('contactEmail').value || 'N/A'), 10, 30);
+            doc.text('Message: ' + (document.getElementById('message').value || 'N/A'), 10, 40);
+
+            // Save the PDF
+            doc.save('my-info.pdf');
+        }
+    </script>
+</body>
+</html>

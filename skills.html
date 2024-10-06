@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skills - My Personal Website</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: url('imagesbackground.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+        }
+        nav {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 10px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        .navigation {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            margin: 0;
+            padding: 0;
+        }
+        .navigation li {
+            margin: 0 15px;
+        }
+        .navigation a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .navigation a:hover {
+            text-decoration: underline;
+        }
+        main {
+            padding: 100px 20px 20px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: rgba(0, 0, 0, 0.6);
+            border-radius: 10px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .skills-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .skills-form input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+        .skills-form button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #28a745;
+            color: #fff;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        .skills-form button:hover {
+            background-color: #218838;
+        }
+        .skills-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .skill-item {
+            background-color: #17a2b8;
+            padding: 10px 15px;
+            border-radius: 20px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .skill-item button {
+            background: none;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        .skill-item .edit-btn {
+            color: #ffc107;
+        }
+        .skill-item .delete-btn {
+            color: #dc3545;
+        }
+        .nav-buttons {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .nav-buttons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        .nav-buttons button:hover {
+            background-color: #0069d9;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul class="navigation">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="personal.html">Personal Info</a></li>
+            <li><a href="education.html">Education</a></li>
+            <li><a href="work.html">Work Experience</a></li>
+            <li><a href="skills.html">Skills</a></li>
+            <li><a href="projects.html">Projects</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <h2>Skills</h2>
+        <form id="skillsForm" class="skills-form">
+            <input type="text" id="skillInput" name="skill" placeholder="Add a new skill" required>
+            <button type="submit">Add Skill</button>
+        </form>
+
+        <ul id="skillsList" class="skills-list">
+            <!-- Skills will be appended here -->
+        </ul>
+
+        <div class="nav-buttons">
+            <button onclick="window.location.href='work.html'">Back: Work Experience</button>
+            <button onclick="window.location.href='projects.html'">Next: Projects</button>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const skillsForm = document.getElementById('skillsForm');
+            const skillsList = document.getElementById('skillsList');
+            const skillInput = document.getElementById('skillInput');
+
+            // Load saved skills data
+            let skillsData = [];
+            if (localStorage.getItem('skills')) {
+                skillsData = JSON.parse(localStorage.getItem('skills'));
+                skillsData.forEach(skill => {
+                    appendSkillItem(skill);
+                });
+            }
+
+            // Function to append skill item to the list
+            function appendSkillItem(skill) {
+                const li = document.createElement('li');
+                li.classList.add('skill-item');
+                li.setAttribute('data-id', skill.id);
+                li.innerHTML = `
+                    <span>${skill.name}</span>
+                    <button class="edit-btn">✎</button>
+                    <button class="delete-btn">🗑️</button>
+                `;
+                skillsList.appendChild(li);
+            }
+
+            // Handle form submission
+            skillsForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const skillName = skillInput.value.trim();
+                if (skillName === '') return;
+
+                const newSkill = {
+                    id: Date.now(),
+                    name: skillName
+                };
+
+                skillsData.push(newSkill);
+                localStorage.setItem('skills', JSON.stringify(skillsData));
+                appendSkillItem(newSkill);
+                skillsForm.reset();
+            });
+
+            // Handle edit and delete actions
+            skillsList.addEventListener('click', (e) => {
+                const li = e.target.parentElement;
+                const id = li.getAttribute('data-id');
+
+                if (e.target.classList.contains('edit-btn')) {
+                    const skill = skillsData.find(item => item.id == id);
+                    const newSkillName = prompt('Edit Skill:', skill.name);
+                    if (newSkillName !== null) {
+                        const trimmedName = newSkillName.trim();
+                        if (trimmedName !== '') {
+                            skill.name = trimmedName;
+                            localStorage.setItem('skills', JSON.stringify(skillsData));
+                            li.querySelector('span').textContent = trimmedName;
+                        }
+                    }
+                }
+
+                if (e.target.classList.contains('delete-btn')) {
+                    if (confirm('Are you sure you want to delete this skill?')) {
+                        skillsList.removeChild(li);
+                        skillsData = skillsData.filter(item => item.id != id);
+                        localStorage.setItem('skills', JSON.stringify(skillsData));
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
